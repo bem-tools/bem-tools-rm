@@ -1,6 +1,8 @@
 'use strict';
 
-var bemNaming = require('bem-naming'),
+var EOL  = require('os').EOL,
+    bemNaming = require('bem-naming'),
+    stream = require('through2'),
     util = require('bem-tools-find/lib/util'),
     remove = require('./lib/remove');
 
@@ -25,11 +27,11 @@ function execute(opts, args) {
 function report() {
     var count = 0;
     return stream.obj(function(item, enc, cb) {
-        this.push('removed: ' + item);
+        this.push('removed: ' + item + EOL);
         count++;
         cb();
     }, function(cb) {
-        this.push(count + ' files were removed');
+        this.push(count + ' files were removed' + EOL);
         cb();
     });
 }
