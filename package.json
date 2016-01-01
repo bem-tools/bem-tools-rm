@@ -1,0 +1,54 @@
+{
+  "name": "bem-tools-rm",
+  "version": "0.0.1",
+  "description": "Tool for removing bem-entities",
+  "bin": {
+    "remove": "bin/rm"
+  },
+  "main": "index.js",
+  "scripts": {
+    "pretest": "npm run lint",
+    "lint": "jshint . && jscs .",
+    "test": "istanbul test _mocha -- --recursive test/",
+    "cover": "istanbul cover _mocha -- --recursive test/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/bem-incubator/bem-tools-rm.git"
+  },
+  "keywords": [
+    "bem",
+    "remove",
+    "delete",
+    "rm",
+    "tools",
+    "bem-tools"
+  ],
+  "maintainers": [
+    "Andrey Kuznetsov <andrey.kuznetsov48@yandex.ru> (http://github.com/tormozz48)"
+  ],
+  "contributors": [
+    "Andrey Kuznetsov <andrey.kuznetsov48@yandex.ru> (http://github.com/tormozz48)"
+  ],
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/bem-incubator/bem-tools-rm/issues"
+  },
+  "homepage": "https://github.com/bem-incubator/bem-tools-rm#readme",
+  "dependencies": {
+    "bem-config": "git://github.com/bem-incubator/bem-config.git",
+    "bem-naming": "^0.5.1",
+    "bem-tools-find": "0.0.1",
+    "coa": "^1.0.1",
+    "through2": "^2.0.0"
+  },
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "coveralls": "^2.11.6",
+    "istanbul": "^0.4.1",
+    "jscs": "^2.7.0",
+    "jshint": "^2.9.1-rc1",
+    "mocha": "^2.3.4",
+    "sinon": "^1.17.2"
+  }
+}
