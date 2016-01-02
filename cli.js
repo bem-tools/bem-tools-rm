@@ -38,7 +38,7 @@ function report() {
 
 module.exports = function() {
     return this
-        .title('BEM Tool Find')
+        .title('BEM Tool for removing BEM entity files')
         .helpful()
         .completable()
         .arg()
