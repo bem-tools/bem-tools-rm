@@ -2,9 +2,6 @@
   "name": "bem-tools-rm",
   "version": "0.0.1",
   "description": "Tool for removing bem-entities",
-  "bin": {
-    "rm": "bin/rm"
-  },
   "main": "index.js",
   "scripts": {
     "pretest": "npm run lint",
