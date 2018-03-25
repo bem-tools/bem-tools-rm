@@ -1,92 +1,69 @@
 'use strict';
 
-var EOL  = require('os').EOL,
-    bemNaming = require('bem-naming'),
-    stream = require('through2'),
-    util = require('bem-tools-find/lib/util'),
-    remove = require('./lib/remove');
+var remove = require('./');
 
-/**
- * Executes find process with given cli options and arguments
- * @param {Object} opts - cli options
- * @param {Object} args - cli arguments
- */
-function execute(opts, args) {
-    var conditions = util.conditionsFromBEMItems(args.entity);
-    conditions.push(util.conditionsFromOptions(opts));
+function noOp() { }
 
-    remove(conditions)
-        .pipe(report())
-        .pipe(process.stdout);
-}
+module.exports = function () {
+    this
+        .title('Remove BEM entity').helpful()
+        .opt()
+        .name('level').short('l').long('level')
+        .title('level directory path')
+        .end()
+        .opt()
+        .name('block').short('b').long('block')
+        .title('block name, required')
+        .arr()
+        .end()
+        .opt()
+        .name('elem').short('e').long('elem')
+        .title('element name')
+        .arr()
+        .end()
+        .opt()
+        .name('mod').short('m').long('mod')
+        .title('modifier name')
+        .arr()
+        .end()
+        .opt()
+        .name('val').short('v').long('val')
+        .title('modifier value')
+        .arr()
+        .end()
+        .opt()
+        .name('tech').short('t').long('remove-tech')
+        .title('remove tech')
+        .arr()
+        .end()
+        .opt()
+        .name('leaveTech').short('lt').long('leave-tech')
+        .title('leave tech')
+        .arr()
+        .end()
+        .opt()
+        .name('entities').title('Entities')
+        .arr()
+        .end()
+        .act(function (opts, args) {
+            var options = {},
+                techs = opts.tech || [];
 
-/**
- * Returns stream for print all removed files and their total count
- * @returns {Stream}
- */
-function report() {
-    var count = 0;
-    return stream.obj(function(item, enc, cb) {
-        this.push('removed: ' + item + EOL);
-        count++;
-        cb();
-    }, function(cb) {
-        this.push(count + ' files were removed' + EOL);
-        cb();
-    });
-}
+            if (opts.leaveTech) {
+                // we intending better to leave tech then to delete
+                techs = techs.filter(tech => !opts.leaveTech.includes(tech));
+            }
 
-module.exports = function() {
-    return this
-        .title('BEM Tool for removing BEM entity files')
-        .helpful()
-        .completable()
-        .arg()
-            .name('entity')
-            .title('entity')
-            .val(function(value) {
-                if (bemNaming.validate(value)) {
-                    return bemNaming.parse(value);
-                } else {
-                    return this.reject('Passed argument is not valid BEM entity');
-                }
-            })
-            .arr()
-        .end()
-        .opt()
-            .name('level')
-            .title('Name of level(s)')
-            .short('l')
-            .long('level')
-            .arr()
-        .end()
-        .opt()
-            .name('block')
-            .title('Name of block(s)')
-            .short('b')
-            .long('block')
-            .arr()
-        .end()
-        .opt()
-            .name('element')
-            .title('Name of element(s)')
-            .short('e')
-            .long('element')
-            .arr()
-        .end()
-        .opt()
-            .name('modifier')
-            .title('Name of modifier(s)')
-            .short('m')
-            .long('mod')
-            .arr()
-        .end()
-        .opt()
-            .name('tech')
-            .title('Name of tech(s)')
-            .short('t')
-            .long('tech')
-            .arr()
-        .end()
-        .act(execute);
+            if (args.entities) {
+                return remove(args.entities, opts.level, techs, options).then(noOp); // wtf is entities
+            }
+
+            opts.block && remove([{
+                block: opts.block[0],
+                elem: opts.elem && opts.elem[0],
+                modName: opts.mod && opts.mod[0],
+                modVal: opts.val ? opts.val[0] : Boolean(opts.mod)
+            }], opts.level, techs, options).then(noOp);
+        })
+        .end();
 };
